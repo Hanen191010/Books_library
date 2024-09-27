@@ -5,32 +5,47 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\BookService; // Import the BookService class
+use App\Http\Requests\Book\StoreRequest; // Import the StoreRequest for validation
+use App\Http\Requests\Book\UpdateRequest; // Import the UpdateRequest for validation
 
 class BookController extends Controller
 {
+    protected $BookService; // Declare the BookService property
+
+    // Dependency Injection of UserService
+    public function __construct(BookService $BookService)
+    {
+        $this->BookService = $BookService; // Assign the injected BookService
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(Book::with('category')->get());
+        // Fetch all books with their associated category
+        return response()->json(Book::with('category')->get()); 
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'author' => 'required|max:255',
-            'published_at' => 'required|date',
-            'category_id' => 'required|exists:categories,id',
-        ]);
-        
-        $book = Book::create($request->all());
+        // Validate the incoming request using the StoreRequest
+        $data = $request->validated();
 
-        return response()->json($book, 201);
+        // Create a new book using the BookService
+        $book = $this->BookService->createBook($data);
+
+        // Check if book creation was successful
+        if (!$book) {
+            return response()->json(['error' => 'Created failed'], 422); // Return an error response if creation failed
+        }
+
+        // Return the newly created book with a 201 Created status code
+        return response()->json($book, 201); 
     }
 
     /**
@@ -38,24 +53,28 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+        // Return the requested book as JSON
         return response()->json($book);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(UpdateRequest $request, Book $book)
     {
-        $request->validate([
-            'title' => 'nullable|max:255',
-            'author' => 'nullable|string|max:20', 
-            'published_at' =>'nullable|date',
-            'category_id' =>'nullable|exist:categories,id'
-        ]);
-        
-        $book->update($request->all());
+        // Validate the incoming request using the UpdateRequest
+        $data = $request->validated();
 
-        return response()->json($book, 201);
+        // Update the book using the BookService
+        $book_update = $this->BookService->updateBook($book, $data);
+
+        // Check if update was successful
+        if (!$book_update) {
+            return response()->json(['error' => 'Updated failed'], 422); // Return an error response if update failed
+        }
+
+        // Return the updated book with a 201 Created status code
+        return response()->json($book, 201); 
     }
 
     /**
@@ -63,17 +82,30 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        $book->delete();
+        // Delete the book using the BookService
+        $deleted = $this->BookService->deleteBook($book);
 
-        return response()->json(null, 204);
+        // Check if deletion was successful
+        if (!$deleted) {
+            return response()->json(['error' => 'Deleted failed'], 422); // Return an error response if deletion failed
+        }
+
+        // Return a 204 No Content status code to indicate successful deletion
+        return response()->json(null, 204); 
     }
 
+    /**
+     * Get books by category ID.
+     */
     public function indexByCategory($categoryId)
-{
-    $category = Category::findOrFail($categoryId);
-    $books = $category->books;
+    {
+        // Find the category by ID
+        $category = Category::findOrFail($categoryId); 
 
-    return response()->json($books);
-}
+        // Get all books associated with the category
+        $books = $category->books; 
 
+        // Return the books as JSON
+        return response()->json($books);
+    }
 }

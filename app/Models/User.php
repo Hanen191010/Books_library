@@ -44,17 +44,24 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-/**
-       * The roles that belong to the User
-       *
-       * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-       */
-      public function roles(): BelongsToMany
-       {
-           return $this->belongsToMany(Role::class);
-       }
+    /**
+     * The roles that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
 
-      public function hasPermissionTo($permission) {
+    /**
+     * Check if the user has a specific permission.
+     *
+     * @param string $permission
+     * @return bool
+     */
+    public function hasPermissionTo($permission) 
+    {
         foreach ($this->roles as $role) {
             if ($role->permissions->contains('name', $permission)) {
                 return true;

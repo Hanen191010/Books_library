@@ -6,53 +6,90 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Services\RoleService; // Import the RoleService class
+use App\Http\Requests\Role\StoreRequest; // Import the StoreRequest for validation
+use App\Http\Requests\Role\UpdateRequest; // Import the UpdateRequest for validation
 
 class RoleController extends Controller {
 
+    protected $RoleService; // Declare the RoleService property
+
+    // Dependency Injection of RoleService
+    public function __construct(RoleService $RoleService)
+    {
+        $this->RoleService = $RoleService; // Assign the injected RoleService
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index() {
-        return Role::all();
+        // Fetch all roles
+        return Role::all(); 
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required|unique:roles',
-            'description' => 'nullable',
-        ]);
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreRequest $request) {
+        // Validate the incoming request using the StoreRequest
+        $data = $request->validated();
 
-        $role = Role::create($request->all());
-        return response()->json($role, 201);
+        // Create a new role using the RoleService
+        $role = $this->RoleService->createRole($data);
+
+        // Check if role creation was successful
+        if (!$role) {
+            return response()->json(['error' => 'Created failed'], 422); // Return an error response if creation failed
+        }
+
+        // Return the newly created role with a 201 Created status code
+        return response()->json($role, 201); 
     }
 
+    /**
+     * Attach a permission to a role.
+     */
     public function attachPermission(Request $request, Role $role) {
+        // Validate the incoming request 
         $request->validate([
-            'permission_id' => 'required|exists:permissions,id',
+            'permission_id' => 'required|exists:permissions,id', // Ensure permission_id exists in the permissions table
         ]);
 
+        // Attach the permission to the role
         $role->permissions()->attach($request->permission_id);
-        return response()->json(['message' => 'Permission added to role'], 200);
+
+        // Return a success message with a 200 OK status code
+        return response()->json(['message' => 'Permission added to role'], 200); 
     }
-/**
+
+    /**
      * Display the specified resource.
      */
     public function show(Role $role)
     {
+        // Return the requested role as JSON
         return response()->json($role);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRequest $request, Role $role)
     { 
+        // Validate the incoming request using the UpdateRequest
+        $data = $request->validated();
 
-        $request->validate([
-            'name' => 'nullable|string|max:20|unique:roles,name', 
-            'description' =>'nullable|string|max:255'
-        ]);
+        // Update the role using the RoleService
+        $updated_Role = $this->RoleService->updateRole($role, $data);
 
-        $role->update($request->all());
+        // Check if update was successful
+        if (!$updated_Role) {
+            return response()->json(['error' => 'Updated failed'], 422); // Return an error response if update failed
+        }
 
-        return response()->json($role, 201);
+        // Return the updated role with a 201 Created status code
+        return response()->json($updated_Role, 201); 
     }
 
     /**
@@ -60,8 +97,15 @@ class RoleController extends Controller {
      */
     public function destroy(Role $role)
     {
-        $role->delete();
+        // Delete the role using the RoleService
+        $deleted = $this->RoleService->deleteRole($role);
 
-        return response()->json(null, 204);
+        // Check if deletion was successful
+        if (!$deleted) {
+            return response()->json(['error' => 'Deleted failed'], 422); // Return an error response if deletion failed
+        }
+
+        // Return a 204 No Content status code to indicate successful deletion
+        return response()->json(null, 204); 
     }
 }

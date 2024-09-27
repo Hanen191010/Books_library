@@ -9,10 +9,22 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    /*
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
         'name',
         'description'
     ];
+
+    /*
+     * Define the relationship between a Category and its Books.
+     * A Category has many Books.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function Books()
     {
         return $this->hasMany(Book::class);

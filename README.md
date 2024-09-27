@@ -1,66 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+▎مشروع إدارة الكتب والفئات باستخدام Laravel API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+هذا المشروع هو نظام API لإدارة الكتب والفئات باستخدام إطار العمل Laravel. يتيح النظام إدارة الكتب والفئات، بالإضافة إلى إدارة المستخدمين والأدوار والصلاحيات. كل كتاب ينتمي إلى فئة معينة، ويجب أن يتمتع المستخدمون بامتيازات محددة لإجراء عمليات معينة.
 
-## About Laravel
+▎المميزات
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- إدارة الكتب:
+  - إضافة كتاب (POST)
+  - تعديل بيانات كتاب (PUT/PATCH)
+  - حذف كتاب (DELETE)
+  - عرض قائمة الكتب (GET)
+  - إضافة كتاب مع تحديد الفئة التي ينتمي إليها
+  - عرض قائمة الكتب حسب الفئة
+  - تعديل بيانات كتاب وفئته
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- إدارة الفئات:
+  - إضافة فئة جديدة (POST)
+  - تعديل بيانات فئة (PUT/PATCH)
+  - حذف فئة (DELETE)
+  - عرض قائمة الفئات (GET)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- إدارة المستخدمين:
+  - إضافة مستخدم جديد مع تحديد دوره وصلاحياته
+  - تعديل بيانات مستخدم، دوره وصلاحياته
+  - عرض قائمة المستخدمين مع أدوارهم وصلاحياتهم
+  - حذف مستخدم
 
-## Learning Laravel
+- إدارة الأدوار والصلاحيات:
+  - إنشاء أدوار وصلاحيات جديدة
+  - ربط صلاحيات معينة بدور محدد
+  - السماح فقط للمستخدمين المصرح لهم بإجراء عمليات معينة بناءً على الصلاحيات الممنوحة لهم
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+▎الصلاحيات الموجودة
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- manage-books: لادارة كل ما يخص الكتب من إضافة وحذف وتعديل وعرض كتاب وقائمة الكتب.
+- manage-categories: لادارة كل ما يخص الفئات من إضافة وحذف وتعديل وعرض فئة وقائمة الفئات.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+▎المتطلبات
 
-## Laravel Sponsors
+- PHP >= 7.3
+- Composer
+- Laravel >= 8.x
+- قاعدة بيانات (MySQL أو SQLite)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+▎إعداد المشروع
 
-### Premium Partners
+1. استنساخ المشروع:
+      git clone https://github.com/Hanen191010/Books_library.git
+   cd Books_library
+   
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+2. تثبيت الاعتماديات:
+      composer install
+   
 
-## Contributing
+3. إعداد ملف البيئة:
+   نسخ ملف .env.example إلى .env وتحديث إعدادات قاعدة البيانات:
+      cp .env.example .env
+   
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. توليد مفتاح التطبيق:
+      php artisan key:generate
+   
 
-## Code of Conduct
+5. تشغيل المهاجرات:
+      php artisan migrate
+   
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. تشغيل الخادم المحلي:
+      php artisan serve
+   
 
-## Security Vulnerabilities
+▎استخدام API
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+يمكنك استخدام أدوات مثل Postman لاختبار API. النقاط النهائية الأساسية هي:
 
-## License
+- كتب:
+  - POST /api/books
+  - PUT /api/books/{id}
+  - DELETE /api/books/{id}
+  - GET /api/books
+  - GET /api/categories/{categoryId}/books
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- فئات:
+  - POST /api/categories
+  - PUT /api/categories/{id}
+  - DELETE /api/categories/{id}
+  - GET /api/categories
+
+- مستخدمون:
+  - POST /api/users
+  - PUT /api/users/{id}
+  - DELETE /api/users/{id}
+  - GET /api/users
+
+- أدوار :
+  - POST /api/roles
+  - PUT /api/roles/{id}
+  - DELETE /api/roles/{id}
+  - GET /api/roles
+
+- الصلاحيات:
+  - POST /api/permissions
+  - PUT /api/permissions/{id}
+  - DELETE /api/permissions/{id}
+  - GET /api/permissions
+  - POST /api/roles/{roleid}/permissions
+
